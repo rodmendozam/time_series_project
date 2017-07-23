@@ -23,6 +23,32 @@ accuracy(artificial3.hw.fore)
 # Test accuracy with independent validation data
 accuracy(artificial3.hw.fore,artificial3_val.ts)
 
+##### Plot predictions against true values #####
+x_train <- artificial3_fit.ts
+x_val <- artificial3_val.ts
+x_pred <- artificial3.hw.fore$mean
+nb_train <- length(x_train)
+nb_val <- length(x_val)
+indices <- c(1:69)
+x_train_and_nan <- c(x_train, rep(NaN, nb_val))
+x_val_and_nan <- c(rep(NaN, nb_train), x_val)
+x_pred_and_nan <- c(rep(NaN, nb_train), x_pred)
+x_pred_ci_upr_and_nan <- c(rep(NaN, nb_train), artificial3.hw.fore$upper[, 2]) #95% ci with 2, 80% ci with 1
+x_pred_ci_lwr_and_nan <- c(rep(NaN, nb_train), artificial3.hw.fore$lower[, 2])
+
+# plot train, valid and predictions note: run the code as block and not a single line
+names <- c('train','valid', 'valid_pred')
+colors <- c('#000000', '#000000', '#990000')
+plot(indices, x_train_and_nan, type = "l", col = colors[1], main = "Forecast from HoltWinters", lwd=1)
+lines(indices, x_val_and_nan, type = "l", col = colors[2], lwd=1, lty=2)
+lines(indices, x_pred_and_nan, type = "l", col = colors[3], lwd=2)
+#lines(indices, x_pred_ci_upr_and_nan, type = "l", col = colors[3], lwd=1,lty=2) 
+#lines(indices, x_pred_ci_lwr_and_nan, type = "l", col = colors[3], lwd=1,lty=2)
+legend('topright', names, lty=c(1,2,1), lwd=2, col=colors, bty='n', cex=.95)
+
+# plot the validation as forecast
+plot(artificial3.hw.fore)
+
 ##### FORECAST #####
 # Make prediction with trained model for next 18 months.
 artificial.hw<-HoltWinters(artificial3.ts,alpha = 0.02, beta = 1.00,gamma = 0.28)
