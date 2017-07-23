@@ -39,15 +39,19 @@ x_pred_ci_lwr_and_nan <- c(rep(NaN, nb_train), artificial3.hw.fore$lower[, 2])
 # plot train, valid and predictions note: run the code as block and not a single line
 names <- c('train','valid', 'valid_pred')
 colors <- c('#000000', '#000000', '#990000')
-plot(indices, x_train_and_nan, type = "l", col = colors[1], main = "Forecast from HoltWinters", lwd=1)
+plot(indices, x_train_and_nan, type = "l", col = colors[1], 
+     main = "Forecast from HoltWinters", ylim=c(500, 6000), 
+     xlab="Year index", ylab="Artificial")
+polygon(c(indices, rev(indices)), c(x_pred_ci_upr_and_nan, rev(x_pred_ci_lwr_and_nan)),
+        col = "#FFE4E4", border = NA)
 lines(indices, x_val_and_nan, type = "l", col = colors[2], lwd=1, lty=2)
 lines(indices, x_pred_and_nan, type = "l", col = colors[3], lwd=2)
-#lines(indices, x_pred_ci_upr_and_nan, type = "l", col = colors[3], lwd=1,lty=2) 
-#lines(indices, x_pred_ci_lwr_and_nan, type = "l", col = colors[3], lwd=1,lty=2)
+lines(indices, x_pred_ci_upr_and_nan, type = "l", col = colors[3], lwd=1,lty=2)
+lines(indices, x_pred_ci_lwr_and_nan, type = "l", col = colors[3], lwd=1,lty=2)
 legend('topright', names, lty=c(1,2,1), lwd=2, col=colors, bty='n', cex=.95)
 
 # plot the validation as forecast
-plot(artificial3.hw.fore)
+# plot(artificial3.hw.fore)
 
 ##### FORECAST #####
 # Make prediction with trained model for next 18 months.
