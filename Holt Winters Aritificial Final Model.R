@@ -43,3 +43,5 @@ ggtsdisplay(artificial3.ets.fore$residuals)
 shapiro.test(artificial3.ets.fore$residuals)
 Box.test(artificial3.ets.fore$residuals,lag=12,type="Ljung-Box")
 tsdiag(artificial3.ets)
+
+

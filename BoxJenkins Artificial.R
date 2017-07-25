@@ -101,22 +101,22 @@ tsdiag(artificial3.arima110011)
 #------------(110)(111)-------------------------
 #################################################
 
-artificial3.arima110011<-Arima(artificial3_fit.ts,order = c(1,1,0),seasonal=list(order=c(0,1,1),period=3))
-artificial3.arima110011
+artificial3.arima110111<-Arima(artificial3_fit.ts,order = c(1,1,0),seasonal=list(order=c(1,1,1),period=3))
+artificial3.arima110111
 ##### VALIDATION #####
 #Forecast of the next 13 points to validate
-artificial3.arima110011.fore<-forecast(artificial3.arima110011, h = 13)
+artificial3.arima110111.fore<-forecast(artificial3.arima110111, h = 13)
 
 # Test the residuals
-ggtsdisplay(artificial3.arima110011.fore$residuals)
-shapiro.test(artificial3.arima110011.fore$residuals)
-Box.test(artificial3.arima110011.fore$residuals,lag=12,type="Ljung-Box")
+ggtsdisplay(artificial3.arima110111.fore$residuals)
+shapiro.test(artificial3.arima110111.fore$residuals)
+Box.test(artificial3.arima110111.fore$residuals,lag=12,type="Ljung-Box")
 # Goodness of fit
-accuracy(artificial3.arima110011.fore)
+accuracy(artificial3.arima110111.fore)
 # Test accuracy with independent validation data
-accuracy(artificial3.arima110011.fore$mean,artificial3_val.ts)
-# Run diagnosis on the arima110011 model
+accuracy(artificial3.arima110111.fore$mean,artificial3_val.ts)
+# Run diagnosis on the arima110111 model
 par(mar = rep(3, 4))
-tsdiag(artificial3.arima110011)
+tsdiag(artificial3.arima110111)
 
 
