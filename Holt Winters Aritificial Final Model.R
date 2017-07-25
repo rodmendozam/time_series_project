@@ -40,7 +40,7 @@ x_pred_ci_lwr_and_nan <- c(rep(NaN, nb_train), artificial3.hw.fore$lower[, 2])
 names <- c('train','valid', 'valid_pred')
 colors <- c('#000000', '#000000', '#990000')
 plot(indices, x_train_and_nan, type = "l", col = colors[1], 
-     main = "Forecast from HoltWinters", ylim=c(500, 6000), 
+     main = "Validation from HoltWinters", ylim=c(500, 6000), 
      xlab="Year index", ylab="Artificial")
 polygon(c(indices, rev(indices)), c(x_pred_ci_upr_and_nan, rev(x_pred_ci_lwr_and_nan)),
         col = "#FFE4E4", border = NA)
