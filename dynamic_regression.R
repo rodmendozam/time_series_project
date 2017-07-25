@@ -101,7 +101,7 @@ ener_sweden.ts.fore$upper[,2] <- x_pred_upper_95
 ener_sweden.ts.fore$lower[,2] <- x_pred_lower_95
 ener_sweden.ts.fore$upper[,1] <- x_pred_upper_80
 ener_sweden.ts.fore$lower[,1] <- x_pred_lower_80
-plot(ener_sweden.ts.fore)
+plot.forecast(ener_sweden.ts.fore)
 
 # plot manually
 nb_train <- length(x_train)
