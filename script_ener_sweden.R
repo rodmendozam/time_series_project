@@ -7,6 +7,7 @@
   # Remove na values
   ener_sweden.ts <-na.omit(ener_sweden.ts)
   gdp_sweden.ts <-na.omit(gdp_sweden.ts)
+  gdp_sweden.ts <-ts(gdp_sweden.ts[1:length(gdp_sweden.ts)-1],start = c(1960,1))
 
 ##### DIFFERENCES #####
 
@@ -31,22 +32,26 @@ spectrum(ener_sweden.ts,span = 2,ylab = "Spectral coefficients",main = "Frequenc
 spectrum(gdp_sweden.ts,span = 2,ylab = "Spectral coefficients" ,main = "Frequency Domain: GDP Sweden", xlab ="Frequency[cycle/year]")
 
 ##### CROSS CORRELATION #####
-ccf(ener_sweden.ts,gdp_sweden.ts,na.action=na.omit)
-ccf(gdp_sweden.d1,ener_sweden.d1,na.action=na.omit)
+ccf(ener_sweden.ts,gdp_sweden.ts,na.action=na.omit,main = "Cross Covariance Energy and GDP")
+energy_sweden.ccf<-ccf(gdp_sweden.d1,ener_sweden.d1,na.action=na.omit,main = "Cross Covariance Differenced Energy and GDP")
+var(energy_sweden.ccf$acf)
 ##### BOX JENKINS #####
 
 ener_sweden.arima010<-Arima(ener_sweden_fit.ts,order = c(0,1,0))
 ener_sweden.arima010
 
-# Validation of model
+###### VALIDATION #####
 ener_sweden.arima010.fore<-forecast(ener_sweden.arima010, h = 10)
+
 # Analysis of residuals
 ggtsdisplay(ener_sweden.arima010.fore$residuals)
 shapiro.test(ener_sweden.arima010.fore$residuals)
 Box.test(ener_sweden.arima010.fore$residuals,lag=12,type="Ljung-Box")
-tsdiag(ener_sweden.arima010)
+
+# Goodness of fit
 accuracy(ener_sweden.arima010.fore$mean,ener_sweden_val.ts)
 
+# Automatic Box Jenkins
 ener_sweden.arima.fore<-forecast(ener_sweden.ts,model = ener_sweden.arima010,h = 6)
 plot.forecast(ener_sweden.arima.fore,xlab = "Year",ylab = "toe", main = "Forecast ARMA Sweden Energy Consumption")
 ener_sweden.arima.auto <- auto.arima(ener_sweden_fit.ts)
@@ -64,9 +69,9 @@ ener_sweden.arima.fore<-forecast(ener_sweden.ts,model = ener_sweden.arima.auto,h
 plot.forecast(ener_sweden.arima.fore,xlab = "Year",ylab = "toe", main = "Forecast ARMA Sweden Energy Consumption")
 
 ##### EXPONENTIAL SMOOTHING #####
-ener_sweden_fit.hw<-HoltWinters(ener_sweden_fit.ts,gamma = FALSE)
-ener_sweden_fit.hw
-ener_sweden_fit.hw.fore<-forecast.HoltWinters(ener_sweden_fit.hw,h = 10)
+ener_sweden_fit.hw<-holt(ener_sweden_fit.ts,damped = TRUE  )
+ener_sweden_fit.hw$model
+ener_sweden_fit.hw.fore<-forecast(ener_sweden_fit.hw,h = 10)
 
 # Validation
 ggtsdisplay(ener_sweden_fit.hw.fore$residuals)
@@ -78,11 +83,12 @@ ener_sweden.hw<-HoltWinters(ener_sweden.ts,alpha = 0.9541859,beta =0.005193973, 
 ener_sweden.hw.fore<-forecast.HoltWinters(ener_sweden.hw,h = 6)
 plot.forecast(ener_sweden.hw.fore,xlab = "Year",ylab = "toe",main = "Holt Forecast Energy Consumption")
 
-# Automatic exponential smoothing
+##### AUTOMATIC EXPONENTIAL SMOOTHING #####
 ener_sweden.ets<-ets(ener_sweden_fit.ts)
 ener_sweden.ets
 ener_sweden.ets.fore<-forecast(ener_sweden.ets,h = 10)
-plot.forecast(ener_sweden.ets.fore)
+
+# Validation
 ggtsdisplay(ener_sweden.ets.fore$residuals)
 shapiro.test(ener_sweden.ets.fore$residuals)
 Box.test(ener_sweden.ets.fore$residuals,lag=12,type="Ljung-Box")
